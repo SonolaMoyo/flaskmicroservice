@@ -52,7 +52,7 @@ class WebServer:
         html_response = create_html_response(rendered_template)
         return html_response
     
-    @http('POST', '/')
+    @http('POST', '/messages')
     def post_message(self, request):
         try:
             data = get_request_data(request)
