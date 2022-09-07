@@ -1,0 +1,4 @@
+packages:
+- nameko
+- rabbitmq
+- redis
