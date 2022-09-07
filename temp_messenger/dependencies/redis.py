@@ -1,6 +1,7 @@
 from importlib.util import set_loader
 from redis import StrictRedis
 from nameko.extensions import DependencyProvider
+from uuid import uuid4
 
 class Redis(DependencyProvider):
     def setup(self):
@@ -23,6 +24,22 @@ class RedisClient:
         if message is None:
             raise RedisError('Message not found: {}'.format(message_id))
         return message
+    
+    def save_message(self, message):
+        message_id = uuid4().hex
+        self.redis.set(message_id, message)
+        
+        return message_id
+    
+    def get_all_messages(self):
+        message_ids = self.redis.keys()
+        messages = []
+        
+        for message_id in message_ids:
+            message = self.redis.get(message_id)
+            messages.append({'id': message_id, 'message': message})
+            
+        return messages
     
 class RedisError(Exception):
     pass
