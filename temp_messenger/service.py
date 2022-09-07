@@ -4,6 +4,7 @@ from nameko.web.handlers import http
 from temp_messenger.dependencies.redis import Redis
 from temp_messenger.dependencies.jinja2 import Jinja2
 from werkzeug.wrappers import Response
+from operator import itemgetter
 
 # class KonnichiwaService:
 #     name = 'konnichiwa_service'
@@ -32,7 +33,8 @@ class MessageService:
     @rpc
     def get_all_messages(self):
         messages = self.redis.get_all_messages()
-        return messages
+        sorted_messages = sort_message_by_expiry(messages)
+        return sorted_messages
 
 class WebServer:
     name = 'web_server'
@@ -77,3 +79,9 @@ def get_request_data(request):
     data_as_text = request.get_data(as_text=True)
     return json.loads(data_as_text)
     
+def sort_message_by_expiry(messages, reverse=True):
+    return sorted(
+        messages,
+        key=lambda message: message['expires_in'],
+        reverse=reverse
+    )
