@@ -17,9 +17,19 @@ class MessageService:
     def get_message(self, message_id):
         return self.redis.get_message(message_id) 
     
+    # @rpc
+    # def konnichiwa(self):
+    #     return 'Konnichiwa!'
+    
     @rpc
-    def konnichiwa(self):
-        return 'Konnichiwa!'
+    def save_message(self, message):
+        message_id = self.redis.save_message(message)
+        return message_id
+    
+    @rpc
+    def get_all_messages(self):
+        messages = self.redis.get_all_messages()
+        return messages
 
 class WebServer:
     name = 'web_server'
