@@ -27,7 +27,7 @@ class RedisClient:
     
     def save_message(self, message):
         message_id = uuid4().hex
-        self.redis.set(message_id, message)
+        self.redis.set(message_id, message, ex=10)
         
         return message_id
     
@@ -37,7 +37,7 @@ class RedisClient:
         
         for message_id in message_ids:
             message = self.redis.get(message_id)
-            messages.append({'id': message_id, 'message': message})
+            messages.append({'id': message_id, 'message': message, 'expires_in': self.redis.pttl(message_id)})
             
         return messages
     
