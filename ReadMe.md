@@ -1,4 +1,4 @@
 packages:
 - nameko
 - rabbitmq
-- redis
+- redisExperimenting microservice using Flask and Nameko microservice
